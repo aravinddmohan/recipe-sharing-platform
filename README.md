@@ -83,7 +83,7 @@ Ensure MySQL is running and configured in Django settings.
 
 ---
 
-## 🛡 Security Practices
+## Security Practices
 
 - .env files are excluded
 - Passwords & DB secrets are not stored in repo
