@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="fw-bold mb-3">Most Viewed Recipes</h2>
+
+<p class="text-muted">
+Sorted by popularity — top dishes first 🍽️
+</p>
+
+<div class="card shadow-sm">
+<div class="card-body p-0">
+
+<table class="table table-hover mb-0">
+
+<thead class="table-dark">
+<tr>
+<th>#</th>
+<th>Recipe Name</th>
+<th>Image</th>
+<th>Added By</th>
+<th>Views</th>
+<th>Cooking Time</th>
+<th>Difficulty</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for recipe in recipes %}
+<tr>
+<td>{{ forloop.counter }}</td>
+
+<td>{{ recipe.recipe_name }}</td>
+
+<td>
+{% if recipe.image %}
+<img src="{{ recipe.image.url }}" width="60" class="rounded">
+{% else %}
+No Image
+{% endif %}
+</td>
+
+<td>{{ recipe.user.email }}</td>
+
+<td>
+<span class="badge bg-dark">{{ recipe.views }}</span>
+</td>
+
+<td>{{ recipe.cooking_time }} mins</td>
+
+<td>{{ recipe.difficulty }}</td>
+
+</tr>
+{% empty %}
+<tr>
+<td colspan="7" class="text-center p-4">No data available</td>
+</tr>
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+</div>
+
+</div>
+
+{% endblock %}

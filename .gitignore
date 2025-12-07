@@ -1,0 +1,25 @@
+**/__pycache__/
+**/*.pyc
+# =========================
+# FRONTEND (React)
+# =========================
+Frontend/recipe-share/node_modules/
+Frontend/recipe-share/.env
+Frontend/recipe-share/build/
+Frontend/recipe-share/dist/
+
+# =========================
+# BACKEND (DJANGO+MySQL)
+# =========================
+Backend/backend_recipe/.env
+Backend/backend_recipe/db.sqlite3
+Backend/backend_recipe/venv/
+Backend/backend_recipe/env/
+Backend/backend_recipe/media/
+
+# =========================
+# GENERAL
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
