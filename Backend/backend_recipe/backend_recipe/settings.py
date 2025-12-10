@@ -27,9 +27,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,8 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',     
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,19 +50,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-from corsheaders.defaults import default_headers, default_methods
 
-CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://recipe-sharing-platform-jqf0p7se-aravinds-projects-194f00cc.vercel.app"
+]
+
+
 CORS_ALLOW_CREDENTIALS = True
+
+from corsheaders.defaults import default_headers
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "authorization",
-    "content-type",
 ]
-
-CORS_ALLOW_METHODS = list(default_methods)
-
 
 ROOT_URLCONF = 'backend_recipe.urls'
 
