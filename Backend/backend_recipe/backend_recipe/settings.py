@@ -51,8 +51,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "https://recipe-sharing-platform-mumqzb1uh-aravinds-projects-194f00cc.vercel.app/"
+import re
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://recipe-sharing-platform-.*\.vercel\.app$"
 ]
 
 
