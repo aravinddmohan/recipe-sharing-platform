@@ -52,7 +52,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://recipe-sharing-platform-jqf0p7se-aravinds-projects-194f00cc.vercel.app"
+    "https://recipe-sharing-platform-mumqzb1uh-aravinds-projects-194f00cc.vercel.app/"
 ]
 
 
