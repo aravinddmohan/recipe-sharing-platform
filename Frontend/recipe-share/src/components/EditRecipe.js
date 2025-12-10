@@ -19,14 +19,19 @@ export default function EditRecipe() {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const API = process.env.REACT_APP_API_URL;
+
   // ✅ AUTH + FETCH
   useEffect(() => {
     const token = localStorage.getItem("authToken");
 
-    if (!token) return navigate("/login");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
     axios
-      .get(`http://localhost:8000/usersinglerecipe/${id}/`, {
+      .get(`${API}/usersinglerecipe/${id}/`, {
         headers: { Authorization: `Token ${token}` },
       })
       .then((res) => {
@@ -37,10 +42,11 @@ export default function EditRecipe() {
           cooking_time: res.data.cooking_time,
           difficulty: res.data.difficulty,
         });
+        setError("");
       })
       .catch(() => setError("Failed to load recipe 😭"))
       .finally(() => setLoading(false));
-  }, [id, navigate]);
+  }, [id, navigate, API]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,7 +63,7 @@ export default function EditRecipe() {
     if (image) data.append("image", image);
 
     axios
-      .post(`http://localhost:8000/userupdaterecipe/${id}/`, data, {
+      .post(`${API}/userupdaterecipe/${id}/`, data, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "multipart/form-data",
@@ -90,11 +96,12 @@ export default function EditRecipe() {
         <div className="absolute inset-0 backdrop-blur-md bg-white/60"></div>
 
         {/* 🧱 FORM CARD */}
-        <div className="relative z-10 w-full max-w-xl
-                        bg-white/90 backdrop-blur-xl
-                        shadow-[0_40px_80px_rgba(0,0,0,0.15)]
-                        rounded-3xl p-8">
-
+        <div
+          className="relative z-10 w-full max-w-xl
+                     bg-white/90 backdrop-blur-xl
+                     shadow-[0_40px_80px_rgba(0,0,0,0.15)]
+                     rounded-3xl p-8"
+        >
           <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
             ✏️ Edit Recipe
           </h2>

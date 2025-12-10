@@ -16,6 +16,8 @@ export default function HomePage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
 
+  const API = process.env.REACT_APP_API_URL;
+
   // Global auth
   useEffect(() => {
     if (!token) {
@@ -26,7 +28,7 @@ export default function HomePage() {
   // Fetch all recipes
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/allrecipelist/?page=${page}`, {
+      .get(`${API}/allrecipelist/?page=${page}`, {
         headers: { Authorization: token ? `Token ${token}` : "" },
       })
       .then((res) => {
@@ -43,17 +45,17 @@ export default function HomePage() {
           setError("Failed to load recipes.");
         }
       });
-  }, [page, token, navigate]);
+  }, [page, token, navigate, API]);
 
-  //trending recipe
+  // trending recipe
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/trending/", {
+      .get(`${API}/trending/`, {
         headers: { Authorization: token ? `Token ${token}` : "" },
       })
       .then((res) => setTrending(res.data))
       .catch(() => console.log("Trending fetch failed"));
-  }, [token]);
+  }, [token, API]);
 
   const filteredRecipes = recipes.filter((r) =>
     r.recipe_name.toLowerCase().includes(search.toLowerCase())
@@ -74,28 +76,25 @@ export default function HomePage() {
 
         {/* SEARCH */}
         <div className="mb-14 flex justify-center">
-  <div className="relative w-full max-w-xl">
+          <div className="relative w-full max-w-xl">
+            <input
+              type="text"
+              placeholder="Search recipes..."
+              className="w-full px-6 py-3 rounded-full bg-white shadow-md
+                         placeholder:text-gray-400
+                         focus:outline-none focus:ring-2
+                         focus:ring-[#c7d2b5]/60 transition
+                         hover:shadow-lg"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-    <input
-      type="text"
-      placeholder="Search recipes..."
-      className="w-full px-6 py-3 rounded-full bg-white shadow-md
-                 placeholder:text-gray-400
-                 focus:outline-none focus:ring-2
-                 focus:ring-[#c7d2b5]/60 transition
-                 hover:shadow-lg"
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
-
-    {/* CUTE ICON */}
-    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-      🔍
-    </span>
-
-  </div>
-</div>
-
+            {/* CUTE ICON */}
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+              🔍
+            </span>
+          </div>
+        </div>
 
         {/* TRENDING */}
         {trending.length > 0 && (
@@ -119,7 +118,7 @@ export default function HomePage() {
                              transition-all"
                 >
                   <img
-                    src={`http://127.0.0.1:8000${recipe.image}`}
+                    src={`${API}${recipe.image}`}
                     alt={recipe.recipe_name}
                     className="w-full h-40 object-cover brightness-[1.05]"
                     onError={(e) => (e.target.style.display = "none")}
@@ -141,7 +140,6 @@ export default function HomePage() {
 
         {/* GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-
           {filteredRecipes.map((recipe) => (
             <div
               key={recipe.id}
@@ -152,7 +150,7 @@ export default function HomePage() {
                          transition-all hover:-translate-y-[2px]"
             >
               <img
-                src={`http://127.0.0.1:8000${recipe.image}`}
+                src={`${API}${recipe.image}`}
                 alt={recipe.recipe_name}
                 className="w-full h-48 object-cover brightness-[1.03] contrast-[1.05]"
                 onError={(e) => (e.target.style.display = "none")}

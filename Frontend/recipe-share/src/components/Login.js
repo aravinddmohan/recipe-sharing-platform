@@ -8,6 +8,7 @@ export default function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
+  const API = process.env.REACT_APP_API_URL;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,11 +26,11 @@ export default function Login() {
     setIsSubmitting(true);
 
     axios
-      .post("http://localhost:8000/userlogin/", form)
+      .post(`${API}/userlogin/`, form)
       .then((res) => {
-        setMsg("Login successful...");
+        setMsg("Login successful ");
 
-        if (res.data.token) {
+        if (res.data?.token) {
           localStorage.setItem("authToken", res.data.token);
         }
 
@@ -37,8 +38,9 @@ export default function Login() {
           navigate("/home");
         }, 1200);
       })
-      .catch(() => {
-        setMsg("Invalid login credentials");
+      .catch((error) => {
+        console.error("Login error:", error);
+        setMsg(" Invalid login credentials");
       })
       .finally(() => setIsSubmitting(false));
   };

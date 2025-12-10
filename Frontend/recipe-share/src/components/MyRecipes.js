@@ -9,7 +9,9 @@ export default function MyRecipes() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  //  AUTH GUARD + FETCH
+  const API = process.env.REACT_APP_API_URL;
+
+  // AUTH GUARD + FETCH
   useEffect(() => {
     const token = localStorage.getItem("authToken");
 
@@ -19,7 +21,7 @@ export default function MyRecipes() {
     }
 
     axios
-      .get("http://localhost:8000/myrecipe/", {
+      .get(`${API}/myrecipe/`, {
         headers: { Authorization: `Token ${token}` },
       })
       .then((res) => {
@@ -38,9 +40,9 @@ export default function MyRecipes() {
         }
       })
       .finally(() => setLoading(false));
-  }, [navigate]);
+  }, [navigate, API]);
 
-  //  DELETE
+  // DELETE
   const handleDelete = (id) => {
     if (!window.confirm("Delete this recipe? This can't be undone.")) return;
 
@@ -48,7 +50,7 @@ export default function MyRecipes() {
     if (!token) return navigate("/login");
 
     axios
-      .delete(`http://localhost:8000/userdeleterecipe/${id}/`, {
+      .delete(`${API}/userdeleterecipe/${id}/`, {
         headers: { Authorization: `Token ${token}` },
       })
       .then(() => {
@@ -62,7 +64,7 @@ export default function MyRecipes() {
   return (
     <>
       <NavBar />
-      
+
       {/* BACKGROUND */}
       <div
         className="min-h-screen relative"
@@ -73,53 +75,49 @@ export default function MyRecipes() {
           backgroundRepeat: "no-repeat",
         }}
       >
-
-        {/*  BLUR OVERLAY */}
+        {/* BLUR OVERLAY */}
         <div className="absolute inset-0 backdrop-blur-md bg-white/60"></div>
+
         <button
-        onClick={() => navigate("/home")}
-        className="mb-6 px-5 py-2 bg-orange-500 text-white rounded-full shadow hover:bg-orange-600 transition"
-      >
-        ← Back to Home
-      </button>
-        {/*  CONTENT */}
+          onClick={() => navigate("/home")}
+          className="relative z-10 mb-6 ml-6 px-5 py-2 bg-orange-500 text-white rounded-full shadow hover:bg-orange-600 transition"
+        >
+          ← Back to Home
+        </button>
+
+        {/* CONTENT */}
         <div className="relative z-10 max-w-6xl mx-auto px-6">
 
           {/* HEADER */}
           <div className="flex items-center justify-between mb-10 -mt-4">
 
-  {/* LEFT SIDE */}
-  <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate("/profile")}
+                className="px-4 py-2 rounded-full
+                           bg-yellow-400 text-gray-900
+                           shadow-md hover:bg-yellow-300
+                           active:scale-95 transition
+                           text-sm font-medium"
+              >
+                ← Back
+              </button>
 
-    <button
-      onClick={() => navigate("/profile")}
-      className="px-4 py-2 rounded-full
-                 bg-yellow-400 text-gray-900
-                 shadow-md hover:bg-yellow-300
-                 active:scale-95 transition
-                 text-sm font-medium"
-    >
-      ← Back
-    </button>
+              <h2 className="text-2xl font-bold flex items-center gap-2">
+                🍽 My Recipes
+              </h2>
+            </div>
 
-    <h2 className="text-2xl font-bold flex items-center gap-2">
-      🍽 My Recipes
-    </h2>
+            <button
+              onClick={() => navigate("/create-recipe")}
+              className="px-4 py-2 rounded-lg
+                         bg-gradient-to-tr from-amber-400 to-orange-500
+                         text-white shadow hover:scale-105 transition"
+            >
+              + Add New
+            </button>
 
-  </div>
-
-  {/* RIGHT SIDE */}
-  <button
-    onClick={() => navigate("/create-recipe")}
-    className="px-4 py-2 rounded-lg
-               bg-gradient-to-tr from-amber-400 to-orange-500
-               text-white shadow hover:scale-105 transition"
-  >
-    + Add New
-  </button>
-
-</div>
-
+          </div>
 
           {/* ERROR */}
           {error && (
@@ -165,7 +163,7 @@ export default function MyRecipes() {
                 {/* IMAGE */}
                 <div className="h-44 overflow-hidden bg-gray-100">
                   <img
-                    src={`http://localhost:8000${recipe.image}`}
+                    src={`${API}${recipe.image}`}
                     alt={recipe.recipe_name}
                     className="w-full h-full object-cover
                                group-hover:scale-110 transition-transform"
@@ -199,37 +197,33 @@ export default function MyRecipes() {
                   {/* ACTIONS */}
                   <div className="flex justify-between mt-4 gap-3">
 
-  {/*  EDIT */}
-  <button
-    className="flex items-center gap-2 px-4 py-2 rounded-lg
-           bg-blue-600 hover:bg-blue-700
-           text-white font-medium
-           shadow-sm transition"
+                    <button
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg
+                             bg-blue-600 hover:bg-blue-700
+                             text-white font-medium
+                             shadow-sm transition"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(recipe.id);
+                      }}
+                    >
+                      Edit
+                    </button>
 
-    onClick={(e) => {
-      e.stopPropagation();
-      handleEdit(recipe.id);
-    }}
-  >
-    Edit
-  </button>
+                    <button
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg
+                             bg-rose-600 hover:bg-rose-700
+                             text-white font-medium
+                             shadow-sm transition"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(recipe.id);
+                      }}
+                    >
+                      Delete
+                    </button>
 
-  {/* 🗑 DELETE */}
-  <button
-    className="flex items-center gap-2 px-4 py-2 rounded-lg
-           bg-rose-600 hover:bg-rose-700
-           text-white font-medium
-           shadow-sm transition"
-
-    onClick={(e) => {
-      e.stopPropagation();
-      handleDelete(recipe.id);
-    }}
-  >
-    Delete
-  </button>
-
-</div>
+                  </div>
 
                 </div>
               </div>

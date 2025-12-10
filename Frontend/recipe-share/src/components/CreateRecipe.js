@@ -14,6 +14,7 @@ export default function CreateRecipe() {
   });
 
   const navigate = useNavigate();
+  const API = process.env.REACT_APP_API_URL;
 
   // ✅ Auth Guard
   useEffect(() => {
@@ -48,9 +49,9 @@ export default function CreateRecipe() {
     if (form.image) payload.append("image", form.image);
 
     axios
-      .post("http://127.0.0.1:8000/useraddrecipe/", payload, {
+      .post(`${API}/useraddrecipe/`, payload, {
         headers: {
-          Authorization: "Token " + token,
+          Authorization: `Token ${token}`,
           "Content-Type": "multipart/form-data",
         },
       })
@@ -59,11 +60,14 @@ export default function CreateRecipe() {
           alert("Recipe published 🚀");
           navigate("/home");
         } else {
-          alert("ERR");
+          alert("Something went wrong 😵");
           console.log(res.data);
         }
       })
-      .catch(() => alert("Server error"));
+      .catch((err) => {
+        console.error(err);
+        alert("Server error 💀");
+      });
   };
 
   return (
@@ -71,16 +75,16 @@ export default function CreateRecipe() {
       className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
       style={{ backgroundImage: "url('/assets/doodle.jpg')" }}
     >
-
       {/* Dark overlay for readability */}
       <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
 
       {/* Recipe Card */}
-      <div className="relative z-10 w-full max-w-md
-                      bg-white/85 backdrop-blur-xl
-                      shadow-[0_40px_120px_rgba(0,0,0,0.25)]
-                      rounded-3xl p-8">
-
+      <div
+        className="relative z-10 w-full max-w-md
+                   bg-white/85 backdrop-blur-xl
+                   shadow-[0_40px_120px_rgba(0,0,0,0.25)]
+                   rounded-3xl p-8"
+      >
         <h2 className="text-3xl font-bold text-center text-[#1f2933] mb-2">
           Create Recipe 🍳
         </h2>

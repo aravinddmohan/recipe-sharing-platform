@@ -5,24 +5,27 @@ import axios from "axios";
 export default function NavBar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [user,setUser]=useState(null);
-  const menuRef = useRef(null); // wrapper for avatar + dropdown
+  const [user, setUser] = useState(null);
+  const menuRef = useRef(null);
 
-  //user avatar
-  useEffect(()=>{
-    const token=localStorage.getItem("authToken");
+  const API = process.env.REACT_APP_API_URL;
+
+  // FETCH USER PROFILE (AVATAR)
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     axios
-      .get("http://localhost:8000/userprofile/", {
+      .get(`${API}/userprofile/`, {
         headers: {
-          Authorization: `Token ${token}`
+          Authorization: `Token ${token}`,
         },
       })
-      .then(res => setUser(res.data))
+      .then((res) => setUser(res.data))
       .catch(() => localStorage.removeItem("authToken"));
-  },[navigate]);
-  // Close dropdown on click outside
+  }, [API]);
+
+  // CLOSE DROPDOWN ON CLICK OUTSIDE
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -34,6 +37,7 @@ export default function NavBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // LOGOUT
   const logout = () => {
     const token = localStorage.getItem("authToken");
 
@@ -44,7 +48,7 @@ export default function NavBar() {
 
     axios
       .post(
-        "http://localhost:8000/userlogout/",
+        `${API}/userlogout/`,
         {},
         {
           headers: {
@@ -57,12 +61,14 @@ export default function NavBar() {
         navigate("/login");
       })
       .catch(() => {
-        // backend fails — force logout local
+        // backend fails — force logout anyway
         localStorage.removeItem("authToken");
         navigate("/login");
       });
   };
-  const firstLetter = user?.name?.charAt(0).toUpperCase();
+
+  const firstLetter = user?.name?.charAt(0)?.toUpperCase();
+
   return (
     <header className="bg-white shadow px-6 py-4 flex justify-between items-center rounded-md relative z-50">
       {/* LOGO */}
@@ -83,16 +89,17 @@ export default function NavBar() {
           Create Recipe
         </button>
 
-        {/* AVATAR + DROPDOWN WRAPPER */}
+        {/* AVATAR + DROPDOWN */}
         <div className="relative" ref={menuRef}>
           {/* AVATAR */}
           <div
             onClick={() => setOpen((prev) => !prev)}
             className="w-10 h-10 rounded-full
-                     flex items-center justify-center
-                     font-bold text-white cursor-pointer
-                     bg-gradient-to-tr from-amber-400 to-orange-500
-                     shadow ring-2 ring-white"title={user?.name}
+                       flex items-center justify-center
+                       font-bold text-white cursor-pointer
+                       bg-gradient-to-tr from-amber-400 to-orange-500
+                       shadow ring-2 ring-white"
+            title={user?.name}
           >
             {firstLetter || "?"}
           </div>
@@ -109,6 +116,7 @@ export default function NavBar() {
               >
                 Profile
               </p>
+
               <p
                 className="px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {

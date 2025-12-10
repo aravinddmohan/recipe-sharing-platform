@@ -9,20 +9,31 @@ export default function ChangePassword() {
   const [newPassword, setNew] = useState("");
   const navigate = useNavigate();
 
+  const API = process.env.REACT_APP_API_URL;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("authToken");
 
-    axios.post("http://localhost:8000/change-password/", {
-      old_password: oldPassword,
-      new_password: newPassword
-    }, {
-      headers: {
-        Authorization: `Token ${token}`
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    axios.post(
+      `${API}/change-password/`,
+      {
+        old_password: oldPassword,
+        new_password: newPassword
+      },
+      {
+        headers: {
+          Authorization: `Token ${token}`
+        }
       }
-    })
+    )
     .then(() => {
-      alert("Password changed");
+      alert("Password changed ✅");
       localStorage.removeItem("authToken");
       navigate("/login");
     })
@@ -34,6 +45,7 @@ export default function ChangePassword() {
   return (
     <>
       <NavBar />
+
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <form 
           onSubmit={handleSubmit}

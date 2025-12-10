@@ -7,6 +7,8 @@ export default function Signup() {
   const [msg, setMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const API = process.env.REACT_APP_API_URL;
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setMsg("");
@@ -23,7 +25,7 @@ export default function Signup() {
     setIsSubmitting(true);
 
     axios
-      .post("http://localhost:8000/signup/", form)
+      .post(`${API}/signup/`, form)
       .then((res) => {
         const message = res.data?.message || "Signup completed.";
         setMsg(message);
@@ -33,14 +35,16 @@ export default function Signup() {
           setMsg("🍜 Welcome to RecipeVerse, chef!");
         }
       })
-      .catch(() => setMsg("Error-Try Again"))
+      .catch((error) => {
+        console.error("Signup error:", error);
+        setMsg(" Signup failed. Please try again.");
+      })
       .finally(() => setIsSubmitting(false));
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e7ecef] via-[#f5f3ef] to-[#ebe6dd] p-6 font-sans">
-
-            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2
                       backdrop-blur-xl bg-white/80
                       shadow-[0_18px_40px_rgba(0,0,0,0.08)]
                       border border-white/60 rounded-3xl overflow-hidden">
@@ -59,7 +63,7 @@ export default function Signup() {
           </div>
         </div>
 
-        {/* FORM (MATCHED SPACING + FONT + STYLE) */}
+        {/* FORM */}
         <div className="p-10 flex flex-col justify-center">
 
           <h2 className="font-['BBH_Sans_Bartle'] text-4xl font-semibold text-[#1f2933]">
