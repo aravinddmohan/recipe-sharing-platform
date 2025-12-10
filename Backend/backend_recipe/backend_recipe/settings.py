@@ -88,11 +88,10 @@ WSGI_APPLICATION = 'backend_recipe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.parse("postgresql://recipe_user:MAzr68nrTsOY1clP19UE0DDjmWjgXYwb@dpg-d4snuo6r433s739pjavg-a/recipe_db_6r9j")
 }
 
 
