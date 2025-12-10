@@ -53,10 +53,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://recipe-sharing-platform-8pql4n4ss-aravinds-projects-194f00cc.vercel.app",
 ]
+CORS_ALLOW_HEADERS = ["*"]
+CORS_ALLOW_METHODS = ["*"]
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'backend_recipe.urls'
 
